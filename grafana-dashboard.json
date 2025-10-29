@@ -1,0 +1,69 @@
+{
+  "id": null,
+  "uid": "nestjs-observability",
+  "title": "NestJS Observability Dashboard",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "API Request Count",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_duration_seconds_count[1m])) by (method)",
+          "legendFormat": "{{method}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          }
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Average Request Duration (ms)",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_duration_seconds_sum[1m])) / sum(rate(http_server_duration_seconds_count[1m])) * 1000",
+          "legendFormat": "avg latency",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          }
+        }
+      ],
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "stat",
+      "title": "Service Uptime",
+      "targets": [
+        {
+          "expr": "up{job=\"otel-collector\"}",
+          "legendFormat": "otel-collector",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          }
+        }
+      ],
+      "gridPos": { "x": 0, "y": 8, "w": 6, "h": 6 }
+    },
+    {
+      "type": "trace",
+      "title": "Recent Traces (Tempo)",
+      "datasource": {
+        "type": "tempo",
+        "uid": "Tempo"
+      },
+      "gridPos": { "x": 6, "y": 8, "w": 18, "h": 6 },
+      "options": {
+        "query": "{ resource.service.name = \"user-crud-service\" }",
+        "maxLines": 10
+      }
+    }
+  ]
+}
