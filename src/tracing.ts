@@ -4,17 +4,21 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 
-const traceExporter = new OTLPTraceExporter({
-  url: 'http://otel-collector:4318/v1/traces',
-});
+// Define SDK configuration directly with service name
+const sdkConfig = {
+  serviceName: 'user-crud-service',
+};
 
+const traceExporter = new OTLPTraceExporter({
+  url: 'http://localhost:4318/v1/traces' // matches your docker-compose service
+});
 
 const metricExporter = new OTLPMetricExporter({
   url: 'http://otel-collector:4318/v1/metrics',
 });
 
 const sdk = new NodeSDK({
-  serviceName: 'user-crud-service',
+  ...sdkConfig,
   traceExporter,
   metricReader: new PeriodicExportingMetricReader({
     exporter: metricExporter,
@@ -23,8 +27,8 @@ const sdk = new NodeSDK({
 });
 
 try {
-    sdk.start();
-    console.log('✅ OpenTelemetry tracing initialized');
+  sdk.start();
+  console.log('✅ OpenTelemetry tracing initialized');
 } catch (error) {
-    console.error('❌ Error initializing OpenTelemetry:', error);
+  console.error('❌ Error initializing OpenTelemetry:', error);
 }
