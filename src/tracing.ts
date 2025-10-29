@@ -14,7 +14,7 @@ const traceExporter = new OTLPTraceExporter({
 });
 
 const metricExporter = new OTLPMetricExporter({
-  url: 'http://otel-collector:4318/v1/metrics',
+  url: 'http://localhost:4318/v1/metrics',
 });
 
 const sdk = new NodeSDK({

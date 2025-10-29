@@ -5,6 +5,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ResponseInterceptor } from './utils/ResponseInterceptor.utils';
 import { AllExceptionsFilter } from './utils/AllExceptionsFilter.utils';
 import { WinstonModule } from 'nest-winston';
+import client from 'prom-client';
 import { LoggerErrorInterceptor } from 'nestjs-pino';
 import * as winston from 'winston';
 
@@ -52,7 +53,11 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
 
-  
+  // Register a metrics endpoint
+  const collectDefaultMetrics = client.collectDefaultMetrics;
+  collectDefaultMetrics();
+
+
   await app.listen(process.env.PORT || 3000);
 
   console.log(`Application is running on:  http://localhost:${process.env.PORT || 3000}`);
