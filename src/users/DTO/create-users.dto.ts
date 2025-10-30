@@ -11,6 +11,10 @@ export class CreateUserDto {
   @MinLength(6)
   password: string;
 
+  @ApiProperty({ example: 'Road 123' })
+  @IsString()
+  address?: string | null;
+
   @ApiProperty({ example: 'John Doe' })
   @IsString()
   name: string;

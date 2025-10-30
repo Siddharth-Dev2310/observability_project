@@ -41,9 +41,19 @@ async function bootstrap() {
   .setTitle('Observability Project API')
   .setDescription('API documentation for Observability Project')
   .setVersion('1.0')
-  .addBearerAuth()
+  .addBearerAuth(
+    { 
+      type: 'http', 
+      scheme: 'bearer', 
+      bearerFormat: 'JWT',
+      name: 'access-token',
+      description: 'Enter your JWT token',
+      in: 'header'
+    },
+    'access-token', // This name must match @ApiBearerAuth() in controllers
+  )
   .build();
-  
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
   
@@ -60,7 +70,5 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3000);
 
-  console.log(`Application is running on:  http://localhost:${process.env.PORT || 3000}`);
-  console.log(`Swagger docs available at: http://localhost:${process.env.PORT || 3000}/api-docs`);
 }
 bootstrap();

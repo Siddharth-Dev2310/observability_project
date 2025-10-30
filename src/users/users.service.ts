@@ -6,7 +6,7 @@ import { CreateUserDto } from './DTO/create-users.dto';
 import { UpdateUserDto } from './DTO/update-users.dto';
 import { hash } from 'bcryptjs';
 import { Counter, Gauge } from 'prom-client';
-import { MetricsService } from '../utils/metrics.service';
+import { MetricsService } from '../metrics/metrics.service';
 
 @Injectable()
 export class UsersService {
